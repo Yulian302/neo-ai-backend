@@ -1,0 +1,18 @@
+{% extends 'base.jinja2' %}
+{% load static %}
+{% block title %}
+    BuiltinModels
+{% endblock %}
+{% block body %}
+    {% include 'header.jinja2' %}
+    <main class="m-4">
+        <h2 class="text-xl leading-7 font-bold">Built-in models</h2>
+        <dl class="mt-6 border-t-[1px] border-gray-600 leading-6">
+        </dl>
+        {% include 'model/index.jinja2' %}
+        <h2 class="text-xl leading-7 font-bold">User-defined models</h2>
+        <dl class="mt-6 border-t-[1px] border-gray-600 leading-6">
+        </dl>
+        {% include 'user/user_models/index.jinja2' %}
+    </main>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.jinja2' %}
+{# loading #}
+{% load static %}
+{% load i18n %}
+{# implementing blocks #}
+{% block title %}
+    Registration
+{% endblock %}
+{% block body %}
+    <div class="flex min-h-full flex-col justify-center px-6 pb-32 pt-28 lg:px-8">
+        <img src="{% static 'images/neoai_logo.svg' %}" alt="NeoAi" class="h-20 ml-9">
+        <h2 class="mt-8 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Register a new
+            account</h2>
+        <div class="p-4 flex justify-center">
+            <form method="post" autocomplete="off" class="form-user">
+                {% csrf_token %}
+                <div class="mb-3"><label for="id_username" class="form-label">Username:</label><input type="text"
+                                                                                                      name="username"
+                                                                                                      required autofocus
+                                                                                                      id="id_username"
+                                                                                                      maxlength="50"
+                                                                                                      minlength="4"
+                                                                                                      class="form-control"/>
+                </div>
+                <div class="mb-3"><label for="id_password1" class="form-label">Password:</label><input type="password"
+                                                                                                       name="password1"
+                                                                                                       required
+                                                                                                       autofocus
+                                                                                                       id="id_password1"
+                                                                                                       minlength="10"
+                                                                                                       class="form-control"/>
+                </div>
+                <div class="mb-3"><label for="id_password2" class="form-label">Confirm password:</label><input
+                        type="password" name="password2" id="id_password2" required autofocus minlength="10"
+                        class="form-control"/></div>
+
+                <div class="danger alert-danger">
+                    {% if error_messages|length > 0 %}
+                        <ul>
+                            {% for msg in error_messages %}
+                                <li class="font-bold text-sm">{{ msg }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-center"><input type="submit" value="Sign Up"
+                                                                  class="btn btn-primary"></div>
+                <br>
+                Already signed up? Go to <a href="{% url 'login' %}">Login</a> page
+            </form>
+        </div>
+    </div>
+{% endblock %}

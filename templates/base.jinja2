@@ -1,0 +1,29 @@
+{% load compress %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    {#    {% compress css %}#}
+    <link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'src/output.css' %}">
+    {#    {% endcompress %}#}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+{% block body %}
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script src="{% static 'user/js/user.js' %}"></script>
+<script src="{% static 'user/js/settings.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
+
+

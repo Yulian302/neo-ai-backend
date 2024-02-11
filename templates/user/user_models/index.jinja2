@@ -1,0 +1,20 @@
+{% extends 'base.jinja2' %}
+{% block title %}
+    Model
+{% endblock %}
+{% block body %}
+    <div class="flex justify-start gap-5 m-5 [&>*]:no-underline">
+        {% for user_model in user_models %}
+            <a href="#">
+                <div class="flex flex-col items-start gap-2.5">
+                    <img src="{{ user_model.image.url }}" alt="{{ user_model.name }}" class="w-48 h-auto">
+                    <div class="w-full flex justify-center"><span
+                            class="text-gray-800 text-sm">{{ user_model.desc_name }}</span>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <span>No user-defined models found</span>
+        {% endfor %}
+    </div>
+{% endblock %}

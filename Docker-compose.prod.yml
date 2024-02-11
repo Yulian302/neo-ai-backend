@@ -1,0 +1,51 @@
+version: '1'
+
+services:
+  db:
+    platform: linux/arm64/v8
+    image: mysql:8.0
+    container_name: neoai_mysql_db_prod
+    restart: always
+    env_file:
+      - .env.prod-sample
+    environment:
+      MYSQL_HOST: ${SQL_HOST}
+      MYSQL_PORT: ${SQL_PORT}
+      MYSQL_DATABASE: ${SQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${SQL_ROOT_PASSWORD}
+      MYSQL_ROOT_USER: ${SQL_ROOT_USER}
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    container_name: neoai_django_web_app_prod
+    restart: always
+    command: gunicorn -c gunicorn/gunicorn.prod.conf.py djangoProject.wsgi:application
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod-sample
+    volumes:
+      - ./static:/usr/src/app/static
+    depends_on:
+      - db
+    links:
+      - db
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./static:/usr/src/app/static
+    ports:
+      - 443:443
+    depends_on:
+      - web
+  redis:
+    image: redis:alpine
+
+volumes:
+  data:
+  static_volume:

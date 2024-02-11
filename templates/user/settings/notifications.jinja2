@@ -1,0 +1,45 @@
+{% extends 'base.jinja2' %}
+{% load static %}
+{% block title %}
+    Settings
+{% endblock %}
+{% block body %}
+    {% include 'header.jinja2' %}
+    <div class="mx-auto max-w-[80rem] pt-8 flex gap-[4rem]">
+        {% include 'user/settings/side_settings.jinja2' %}
+        <main class="flex-auto">
+            <form action="{% url 'delete_notifications' %}" method="post">
+                <h2 class="text-xl leading-7 font-bold">Notifications</h2>
+                <p class="flex justify-between [&>*]:text-sm [&>*]:leading-7">
+                    <span class="text-gray-600">These are your account notifications</span>
+                    <span class="text-blue-800"><button
+                            name="clear_all">clear all</button></span>
+                </p>
+                <dl class="mt-6 border-t-[1px] border-gray-600 leading-6">
+                </dl>
+                <div class="flex flex-col gap-2.5">
+                    {% csrf_token %}
+                    {% for notification in notifications %}
+                        <div class="flex justify-between  bg-gray-50 px-2 py-3">
+                            <input type="hidden" name="notification" value={{ notification.id }}>
+                            <img src="{% static 'images/' %}{{ notification.success_number }}_msg.svg"
+                                 alt="Success sign" class="w-5 h-5"/>
+                            <span class="text-success_{{ notification.success_number }}">{{ notification.message }}</span>
+                            <span class="text-sm text-gray-400">{{ notification.created_at }}</span>
+                            <button type="submit">
+                                <div class="rounded-full p-[2px] hover:bg-gray-100">
+                                    <img
+                                            src="{% static 'images/close_btn.svg' %}"
+                                            alt="close"
+                                            class="w-5 h-5"/></div>
+                            </button>
+                        </div>
+
+                        {% empty %}
+                        No notifications
+                    {% endfor %}
+                </div>
+            </form>
+        </main>
+    </div>
+{% endblock %}

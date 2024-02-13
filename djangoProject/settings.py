@@ -1,24 +1,20 @@
 import os
-from configparser import SafeConfigParser
+import pathlib
 from datetime import timedelta
 from pathlib import Path
-
-import django.db.models
-import rest_framework.permissions
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 load_dotenv(
     dotenv_path=Path(
-        "/Users/yulianbohomol/PycharmProjects/djangoProject/.env.dev-sample"
+        '/Users/yulianbohomol/PycharmProjects/NeoAiProject/djangoProject/.env.dev-sample'
     )
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_NAME = "djangoProject"
 PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True if int(os.environ["DEBUG"]) == 1 else False
@@ -85,7 +81,6 @@ COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_ENABLED = True
 
 ROOT_URLCONF = "djangoProject.urls"
-from django.template.backends.jinja2 import Jinja2
 
 TEMPLATES = [
     {
@@ -230,15 +225,15 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale/"),)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATICFILES_FINDERS = (
     "compressor.finders.CompressorFinder",
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 # for production:
-if not DEBUG:
-    STATIC_ROOT = "/usr/src/app/static/"
+# if not DEBUG:
+#     STATIC_ROOT = "/usr/src/app/static/"
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

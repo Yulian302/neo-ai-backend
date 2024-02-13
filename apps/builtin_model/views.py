@@ -1,3 +1,5 @@
+import os.path
+
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.http import JsonResponse
@@ -8,6 +10,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.viewsets import ViewSet
+
+from .models import AiModel
 from .serializers import *
 from .utils.prediction import use_model
 
@@ -50,7 +54,7 @@ class AiModelUsageViewSet(ViewSet):
 
 
 def use_ai_model(model_name: str, base64data):
-    model_path = f"/Users/yulianbohomol/PycharmProjects/djangoProject/apps/builtin_model/serialized/{model_name.lower()}.h5"
+    model_path = os.path.join(settings.BASE_DIR, f'apps/builtin_model/serialized/{model_name}.h5')
     pred_, infer_time_ = use_model(
         model_path, model_name=model_name, base64data=base64data
     )

@@ -17,12 +17,12 @@ class Image:
         np_data = np.frombuffer(decoded_data, dtype=np.uint8)
         return cv2.imdecode(np_data, cv2.IMREAD_UNCHANGED)
 
-    def preprocess(self) -> None:
-        if self.image.shape != (512, 512):
+    def preprocess(self, required_shape: tuple, channels: int) -> None:
+        if self.image.shape != required_shape:
             self.image = cv2.resize(
-                self.image, dsize=(512, 512), interpolation=cv2.INTER_CUBIC
+                self.image, dsize=required_shape, interpolation=cv2.INTER_CUBIC
             )
-        self.image = np.reshape(self.image, (-1, 512, 512, 3))
+        self.image = np.reshape(self.image, (-1, required_shape[0], required_shape[1], channels))
 
     def augment(self) -> None:
         self.image = Image_.fromarray(np.uint8((self.image * 255).astype(np.uint8)))

@@ -5,7 +5,7 @@ from apps.builtin_model.source.classifiers.ClModel import ClModel
 from apps.builtin_model.utils.Image import Image
 
 
-def init_model(model_name: str, img_height: int, img_width: int) -> any:
+def init_model(model_name: str) -> any:
     model_name_lower = model_name.lower()
     if model_name_lower == "clmodel":
         return ClModel
@@ -13,13 +13,13 @@ def init_model(model_name: str, img_height: int, img_width: int) -> any:
         raise Exception("No models found")
 
 
-def use_model(model_path: str, model_name: str, base64data, im_h=512, im_w=512):
+def use_vgg16_model(model_path: str, model_name: str, base64data, image_size):
     try:
-        cl_model = init_model(model_name, im_h, im_w)
+        cl_model = init_model(model_name)
         model = load_model(model_path, custom_objects={model_name: cl_model})
         img_ = Image(data=base64data)
         img_.augment()
-        img_.preprocess()
+        img_.preprocess(required_shape=(image_size, image_size), channels=3)
         start = time()
         predictions = model.predict(img_.image)
         infer_time = time() - start

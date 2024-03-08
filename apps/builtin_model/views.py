@@ -11,9 +11,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.viewsets import ViewSet
 
-from .models import AiModel
 from .serializers import *
-from .utils.prediction import use_model
+from .utils.prediction import use_vgg16_model
+from .utils.segmentation import use_unet_model
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 CACHE_TTL = getattr(settings, "CACHE_TTL", DEFAULT_TIMEOUT)
 
@@ -35,14 +36,18 @@ class AiModelUsageViewSet(ViewSet):
     serializer_class = AiImageUploadSerializer
 
     @action(detail=False, methods=["post"])
-    def use(self, request, *args, **kwargs):
+    def use(self, request, pk=None, *args, **kwargs):
         try:
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             format_, img_str = request.data["image"].split(";base64,")
             ext_ = format_.split("/")[-1]
-            model_name = request.data["model_name"]
-            prediction_label, infer_time = use_ai_model(model_name, img_str)
+            model_name = AiModel.objects.get(id=pk).name
+            models_size = {
+                'ClModel': 512,
+                'BrainTumorMriSegmentationUnet': 128
+            }
+            prediction_label, infer_time = use_ai_model(model_name, img_str, img_size=models_size[model_name])
             return JsonResponse(
                 {"prediction_label": prediction_label, "inference_time": infer_time},
                 safe=False,
@@ -53,9 +58,11 @@ class AiModelUsageViewSet(ViewSet):
             return JsonResponse({"error": e})
 
 
-def use_ai_model(model_name: str, base64data):
+def use_ai_model(model_name: str, base64data, img_size):
     model_path = os.path.join(settings.BASE_DIR, f'apps/builtin_model/serialized/{model_name}.h5')
-    pred_, infer_time_ = use_model(
-        model_path, model_name=model_name, base64data=base64data
-    )
+    model_params = {
+        'ClModel': lambda: use_vgg16_model(model_path, model_name, base64data, img_size),
+        'BrainTumorMriSegmentationUnet': lambda: use_unet_model(model_path, base64data, img_size)
+    }
+    pred_, infer_time_ = model_params[model_name]()
     return pred_, infer_time_

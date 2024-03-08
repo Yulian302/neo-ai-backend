@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path, re_path
 from django.views.generic import RedirectView
+from django.http import HttpResponseNotFound, Http404
 
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
@@ -11,3 +12,5 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     re_path(r"^favicon\.ico$", RedirectView.as_view(url="/static/favicon.ico")),
 ]
+
+handler404 = 'djangoProject.views.handler404'

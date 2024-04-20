@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv(
     dotenv_path=Path(
-        '/Users/yulianbohomol/PycharmProjects/NeoAiProject/djangoProject/.env.dev-sample'
+        f'/Users/yulianbohomol/PycharmProjects/NeoAiProject/djangoProject/.env.prod-sample'
     )
 )
 
@@ -18,6 +18,7 @@ PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True if int(os.environ["DEBUG"]) == 1 else False
+
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
 # Application definition
 INSTALLED_APPS = [
@@ -26,7 +27,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
-    "debug_toolbar",
+    # "debug_toolbar",
     "apps.apirouter.apps.ApirouterConfig",
     "apps.person.apps.PersonConfig",
     "apps.user.apps.UserConfig",
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     "compressor",
 ]
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -108,7 +109,7 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
 
 # not the best practice
-CSRF_TRUSTED_ORIGINS = ["https://localhost:3000", "https://127.0.0.1:3000"]
+# CSRF_TRUSTED_ORIGINS = ["https://localhost:3000", "https://127.0.0.1:3000"]
 
 WSGI_APPLICATION = "djangoProject.wsgi.application"
 # Database

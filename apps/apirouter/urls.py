@@ -13,6 +13,5 @@ urlpatterns = [
     path("user/", include("apps.user.urls")),
     path("models/", include("apps.builtin_model.urls")),
     path("token/", include("apps.security.auth.simpleJwt.token_urls")),
-    path("models/", include("apps.builtin_model.urls")),
     path("csrf/", CsrfToken.as_view()),
 ]

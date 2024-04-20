@@ -16,6 +16,7 @@ services:
       MYSQL_ROOT_USER: ${SQL_ROOT_USER}
     volumes:
       - data:/var/lib/mysql
+      - ./neoai_db_dump.sql:/docker-entrypoint-initdb.d/datadump.sql
     ports:
       - "3306:3306"
   web:
@@ -37,15 +38,12 @@ services:
       - db
   nginx:
     build: ./nginx
-    volumes:
-      - ./static:/usr/src/app/static
     ports:
       - 443:443
-    depends_on:
-      - web
   redis:
     image: redis:alpine
-
+    depends_on:
+      - web
 volumes:
   data:
   static_volume:

@@ -1,23 +1,20 @@
 import os
-import pathlib
 from datetime import timedelta
 from pathlib import Path
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
-load_dotenv(
-    dotenv_path=Path(
-        f'/Users/yulianbohomol/PycharmProjects/NeoAiProject/djangoProject/.env.prod-sample'
-    )
-)
+
+load_dotenv(dotenv_path=Path("./env.dev-sample"))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_NAME = "djangoProject"
 PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
-# SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = True if int(os.environ["DEBUG"]) == 1 else False
+# DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
 # Application definition
@@ -29,7 +26,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     # "debug_toolbar",
     "apps.apirouter.apps.ApirouterConfig",
-    "apps.person.apps.PersonConfig",
     "apps.user.apps.UserConfig",
     "apps.page_router.apps.PagerouterConfig",
     "apps.builtin_model.apps.ModelConfig",
@@ -178,8 +174,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # oAuth2
-BASE_APP_URL = "https://localhost:3000"
-BASE_API_URL = "https://localhost:8000"
+BASE_APP_URL = os.environ.get("FRONTEND_URL")
+BASE_API_URL = "localhost:8000"
 
 # for debug toolbar
 DEBUG_TOOLBAR_PANELS = [

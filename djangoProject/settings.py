@@ -6,17 +6,21 @@ from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 
-load_dotenv(dotenv_path=Path("./env.dev-sample"))
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_NAME = "djangoProject"
 PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
 
+# DJANGO_PROD == "True"  -> production
+DEBUG = False if os.getenv("DJANGO_PROD") == "True" else True
+
+load_dotenv(dotenv_path=Path(f"./env.{'dev' if DEBUG else 'prod'}-sample"))
+
+
 SECRET_KEY = os.getenv("SECRET_KEY")
-# DEBUG = False
-DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
+
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,7 +28,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
-    # "debug_toolbar",
     "apps.apirouter.apps.ApirouterConfig",
     "apps.user.apps.UserConfig",
     "apps.page_router.apps.PagerouterConfig",
@@ -44,8 +47,11 @@ INSTALLED_APPS = [
     "bootstrap5",
     "compressor",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.insert(5, "debug_toolbar")
+
 MIDDLEWARE = [
-    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -57,6 +63,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 # auth
 
@@ -226,9 +235,6 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
-# for production:
-# if not DEBUG:
-#     STATIC_ROOT = "/usr/src/app/static/"
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

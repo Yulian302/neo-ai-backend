@@ -13,13 +13,14 @@ PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
 # DJANGO_PROD == "True"  -> production
 DEBUG = False if os.getenv("DJANGO_PROD") == "True" else True
 
+print(f"Debug is {DEBUG}")
+
 load_dotenv(dotenv_path=Path(f"./env.{'dev' if DEBUG else 'prod'}-sample"))
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
-
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 # Application definition
 INSTALLED_APPS = [
@@ -101,8 +102,8 @@ TEMPLATES = [
     },
 ]
 
-CORS_ORIGIN_ALLOW_ALL = bool(os.getenv("CORS_ORIGIN_ALLOW_ALL"))
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(",")
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGIN_REGEXES = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "DELETE")
@@ -228,13 +229,9 @@ LANGUAGE_CODE = "en"
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale/"),)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-STATIC_URL = "/static/"
+STATIC_URL = "static/"
+STATIC_ROOT = "/var/www/neoai/static/"
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-STATICFILES_FINDERS = (
-    "compressor.finders.CompressorFinder",
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-)
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

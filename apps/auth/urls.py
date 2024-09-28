@@ -11,7 +11,7 @@ from apps.auth.views import (
 urlpatterns = [
     re_path(r"register/", RegisterView.as_view()),
     re_path(r"session/", SessionView.as_view()),
-    re_path(r"login/google/$", GoogleLoginApi.as_view()),
+    re_path(r"google/login/$", GoogleLoginApi.as_view(), name='google_login'),
     re_path(r"login/$", LoginView.as_view()),
     re_path(r"logout/", LogoutView.as_view()),
 ]

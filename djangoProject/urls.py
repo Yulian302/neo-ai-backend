@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path, re_path
 from django.views.generic import RedirectView
-from django.http import HttpResponseNotFound, Http404
 
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),

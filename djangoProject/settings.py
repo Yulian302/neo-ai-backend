@@ -1,35 +1,33 @@
 import os
-import pathlib
 from datetime import timedelta
 from pathlib import Path
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
-load_dotenv(
-    dotenv_path=Path(
-        f'/Users/yulianbohomol/PycharmProjects/NeoAiProject/djangoProject/.env.prod-sample'
-    )
-)
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_NAME = "djangoProject"
 PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = True if int(os.environ["DEBUG"]) == 1 else False
+# DJANGO_PROD == "True"  -> production
+DEBUG = False if os.getenv("DJANGO_PROD") == "True" else True
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
+print(f"Debug is {DEBUG}")
+
+load_dotenv(dotenv_path=Path(f"./env.{'dev' if DEBUG else 'prod'}-sample"))
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "corsheaders",
     "rest_framework",
+    "rest_framework.authtoken",
     "rest_framework_simplejwt.token_blacklist",
-    # "debug_toolbar",
     "apps.apirouter.apps.ApirouterConfig",
-    "apps.person.apps.PersonConfig",
     "apps.user.apps.UserConfig",
     "apps.page_router.apps.PagerouterConfig",
     "apps.builtin_model.apps.ModelConfig",
@@ -48,8 +46,11 @@ INSTALLED_APPS = [
     "bootstrap5",
     "compressor",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.insert(5, "debug_toolbar")
+
 MIDDLEWARE = [
-    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -61,6 +62,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 # auth
 
@@ -96,8 +100,8 @@ TEMPLATES = [
     },
 ]
 
-CORS_ORIGIN_ALLOW_ALL = bool(os.getenv("CORS_ORIGIN_ALLOW_ALL"))
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(",")
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGIN_REGEXES = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "DELETE")
@@ -178,8 +182,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # oAuth2
-BASE_APP_URL = "https://localhost:3000"
-BASE_API_URL = "https://localhost:8000"
+BASE_APP_URL = os.environ.get("FRONTEND_URL")
+BASE_API_URL = "localhost:8000"
 
 # for debug toolbar
 DEBUG_TOOLBAR_PANELS = [
@@ -223,16 +227,9 @@ LANGUAGE_CODE = "en"
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale/"),)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-STATIC_URL = "/static/"
+STATIC_URL = "static/"
+STATIC_ROOT = "/var/www/neoai/static/"
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-STATICFILES_FINDERS = (
-    "compressor.finders.CompressorFinder",
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-)
-# for production:
-# if not DEBUG:
-#     STATIC_ROOT = "/usr/src/app/static/"
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -266,6 +263,7 @@ SECURE_HSTS_SECONDS = 30  # Unit is seconds; *USE A SMALL VALUE FOR TESTING!*
 SECURE_HSTS_PRELOAD = True
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 # caching
 if not DEBUG:

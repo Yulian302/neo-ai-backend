@@ -1,4 +1,5 @@
 # services.py
+import os
 from typing import Dict, Any
 from urllib.parse import urlencode
 
@@ -8,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 
-GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://oauth2.googleapis.com/token"
+GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 LOGIN_URL = f"{settings.BASE_APP_URL}/internal/login"
 
@@ -17,8 +18,8 @@ LOGIN_URL = f"{settings.BASE_APP_URL}/internal/login"
 def google_get_access_token(code: str, redirect_uri: str) -> str:
     data = {
         "code": code,
-        "client_id": settings.GOOGLE_OAUTH2_CLIENT_ID,
-        "client_secret": settings.GOOGLE_OAUTH2_CLIENT_SECRET,
+        "client_id": os.environ['GOOGLE_OAUTH2_CLIENT_ID'],
+        "client_secret": os.environ['GOOGLE_OAUTH2_CLIENT_SECRET'],
         "redirect_uri": redirect_uri,
         "grant_type": "authorization_code",
     }
@@ -27,17 +28,23 @@ def google_get_access_token(code: str, redirect_uri: str) -> str:
     if not response.ok:
         raise ValidationError("Could not get access token from Google.")
 
-    access_token = response.json()["access_token"]
+    new_data = response.content
+    access_token = data["access_token"]
 
     return access_token
 
 
 # Get user info from google
-def google_get_user_info(access_token: str) -> Dict[str, Any]:
-    response = requests.get(GOOGLE_USER_INFO_URL, params={"access_token": access_token})
+
+def google_get_user_info(*, access_token: str) -> Dict[str, Any]:
+    # Reference: https://developers.google.com/identity/protocols/oauth2/web-server#callinganapi
+    response = requests.get(
+        GOOGLE_USER_INFO_URL,
+        params={'access_token': access_token}
+    )
 
     if not response.ok:
-        raise ValidationError("Could not get user info from Google.")
+        raise ValidationError('Failed to obtain user info from Google.')
 
     return response.json()
 

@@ -20,19 +20,6 @@ class LoginSerializer(serializers.Serializer):
         return {"user": user}
 
 
-class OAuth2LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-
-    def validate(self, attrs):
-        user = authenticate(username=attrs["username"])
-        if not user:
-            raise serializers.ValidationError(
-                "User could not be found!")
-        if not user.is_active:
-            raise serializers.ValidationError("User is disabled.")
-        return {"user": user}
-
-
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()

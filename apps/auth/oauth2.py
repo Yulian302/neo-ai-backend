@@ -54,7 +54,7 @@ def create_user(user_data: Response):
 
     response = HttpResponseRedirect(redirect_to=os.getenv("FRONTEND_URL"))
     response.set_cookie('access_token', str(
-        refresh.access_token), httponly=True, secure=True, samesite='LAX')
+        refresh.access_token), httponly=True, secure=True, samesite='None')
     response.set_cookie('refresh_token', str(
-        refresh), httponly=True, secure=True, samesite='LAX')
+        refresh), httponly=True, secure=True, samesite='None')
     return response

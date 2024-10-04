@@ -91,14 +91,8 @@ TEMPLATES = [
     },
 ]
 
-
-# CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_ALLOW_ALL = os.getenv("CORS_ORIGIN_ALLOW_ALL")
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
-# CORS_ALLOWED_ORIGINS = [
-#     'https://neo-ai-front-rprz.vercel.app',
-# ]
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGIN_REGEXES = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "DELETE")

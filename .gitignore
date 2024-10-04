@@ -18,7 +18,6 @@ static/rest_framework
 
 # other
 temp
-nginx
 dist
 images
 *.cnf
@@ -34,6 +33,7 @@ images
 **/__pycache__
 dist/
 *.sql
+
 
 # env files
 env*

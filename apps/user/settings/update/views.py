@@ -1,7 +1,7 @@
 from rest_framework import permissions, status
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
-
+from apps.auth.custom_auth import CookieJWTAuthentication
 from apps.user.serializers import UpdateUserSerializer
 
 
@@ -9,6 +9,7 @@ class UpdateUserInfo(UpdateAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
+    authentication_classes = [CookieJWTAuthentication]
     serializer_class = UpdateUserSerializer
 
     def retrieve(self, request, *args, **kwargs):

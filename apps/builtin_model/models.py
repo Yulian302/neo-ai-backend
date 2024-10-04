@@ -10,7 +10,7 @@ class AiModel(models.Model):
         max_length=80, default="undefined", verbose_name="Description Name"
     )
     description = models.CharField(max_length=256, null=True)
-    image = models.ImageField(upload_to="models_images")
+    image = models.CharField(max_length=512, null=False)
 
     def __repr__(self):
         return self.name

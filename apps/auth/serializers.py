@@ -10,9 +10,11 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, attrs):
-        user = authenticate(username=attrs["username"], password=attrs["password"])
+        user = authenticate(
+            username=attrs["username"], password=attrs["password"])
         if not user:
-            raise serializers.ValidationError("Incorrect username or password.")
+            raise serializers.ValidationError(
+                "Incorrect username or password.")
         if not user.is_active:
             raise serializers.ValidationError("User is disabled.")
         return {"user": user}
@@ -32,7 +34,8 @@ class RegisterSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         try:
-            user = User.objects.create_user(username=validated_data["username"])
+            user = User.objects.create_user(
+                username=validated_data["username"])
             user.set_password(validated_data["password"])
             user.save()
         except:

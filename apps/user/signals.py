@@ -18,7 +18,8 @@ def create_profile(sender, instance, created, **kwargs):
             "&name=%(name)s"
         )
         name_letter = instance.username[0]
-        avatar_response = requests.get(url % {"name": name_letter}, stream=True)
+        avatar_response = requests.get(
+            url % {"name": name_letter}, stream=True)
         file_name = f"{instance.username}.png"
         try:
             local_file_path = f"{settings.BASE_DIR}/temp/{file_name}"
@@ -42,5 +43,5 @@ def create_profile(sender, instance, created, **kwargs):
             print("File could not be created!")
         UserProfile.objects.create(
             user=instance,
-            avatar_url=f"{settings.AWS_S3_BASE_URL%{'dir_name':'avatars','file_name':file_name}}",
+            avatar_url=f"{settings.AWS_S3_BASE_URL}/avatars/{file_name}",
         )

@@ -1,1 +1,3 @@
-local run - ./manage.py runserver_plus --cert-file cert.pem --key-file key.pem
+local run - nohup ./manage.py runserver_plus --cert-file /etc/letsencrypt/live/sampledomain.space/fullchain.pem --key-file /etc/letsencrypt/live/sampledomain.space/privkey.pem
+
+gunicorn djangoProject.wsgi:application --keyfile /etc/letsencrypt/live/sampledomain.space/privkey.pem --certfile /etc/letsencrypt/live/sampledomain.space/fullchain.pem --bind 127.0.0.1:8000 --daemon

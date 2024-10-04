@@ -5,15 +5,18 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_NAME = "djangoProject"
 PROJECT_DIR = "%s/%s" % (BASE_DIR, PROJECT_NAME)
+
 
 DEBUG = False if os.getenv("DJANGO_PROD") == "True" else True
 
 print(f"Debug is {DEBUG}")
 
 load_dotenv(dotenv_path=Path(f"./env.{'dev' if DEBUG else 'prod'}-sample"))
+
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -88,7 +91,10 @@ TEMPLATES = [
     },
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+
+
+
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGIN_REGEXES = True
@@ -174,6 +180,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 if DEBUG:
     DEBUG_TOOLBAR_PANELS = [
         "debug_toolbar.panels.history.HistoryPanel",
@@ -190,6 +197,7 @@ if DEBUG:
         "debug_toolbar.panels.redirects.RedirectsPanel",
         "debug_toolbar.panels.profiling.ProfilingPanel",
     ]
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]

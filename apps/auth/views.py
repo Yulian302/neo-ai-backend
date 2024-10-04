@@ -16,7 +16,6 @@ class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        print('fdskjsdk')
         try:
             serializer = LoginSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -31,9 +30,9 @@ class LoginView(APIView):
             })
 
             response.set_cookie("access_token", str(
-                access_token), httponly=True, secure=True, samesite='LAX')
+                access_token), httponly=True, secure=False, samesite=None)
             response.set_cookie("refresh_token", str(
-                refresh), httponly=True, secure=True, samesite='LAX')
+                refresh), httponly=True, secure=False, samesite=None)
             return response
 
         except Exception as e:
@@ -50,21 +49,15 @@ class RegisterView(APIView):
         try:
             serializer = RegisterSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            user = User.objects.create_user(
+            User.objects.create_user(
                 username=serializer.validated_data["username"],
                 password=serializer.validated_data["password"],
             )
-
-            # Generate JWT tokens for the new user
-            refresh = RefreshToken.for_user(user)
-            access_token = refresh.access_token
-
             return JsonResponse({
                 "success": True,
                 "message": "User successfully created",
-                "access_token": str(access_token),
-                "refresh_token": str(refresh)
             }, status=201)
+
         except ValidationError as e:
             return JsonResponse({"success": False, "message": str(e)}, status=400)
         except Exception as e:

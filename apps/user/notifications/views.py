@@ -1,7 +1,7 @@
 from rest_framework import generics, status, permissions
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.auth.custom_auth import CookieJWTAuthentication
 from apps.user.models import UserNotification
 from apps.user.serializers import UserNotificationsSerializer
 
@@ -10,11 +10,11 @@ class UserNotificationDeleteView(generics.DestroyAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
+    authentication_classes = [CookieJWTAuthentication]
     queryset = UserNotification.objects.all()
     serializer_class = UserNotificationsSerializer
 
     def delete(self, request, *args, **kwargs):
-        notification_id = kwargs.get("pk")
         try:
             notification = self.get_object()
             notification.delete()

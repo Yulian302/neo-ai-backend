@@ -1,27 +1,44 @@
+# config and dependency files
 venv
 db.sqlite3
-node_modules
-package-lock.json
-static/CACHE
 development.cfg
 production.cfg
-.env*
+
+# ai models (too large)
 apps/builtin_model/serialized
+
+# static
+
+static/CACHE
 static/images
 static/admin
 static/debug_toolbar
 static/django_extensions
 static/rest_framework
-.idea
+
+# other
 temp
 dist
 images
 *.cnf
+
+# certificates
 *.cert
 *.pem
 *.csr
+*.crt
+*.key
+
+# cache and dist
 **/__pycache__
-.idea
 dist/
 *.sql
+
+
+# env files
 env*
+.env*
+
+# ide-specific
+.idea
+.vscode
